@@ -83,6 +83,7 @@
         -->
     </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadHttpFilesToCopy)' == 'true' ">
+        <!--
         <HttpFilesToCopy Include="https://github.com/jippi/hashi-ui/releases/download/v${VersionHashiUI}/hashi-ui-linux-amd64">
             <Destination>$(DirBuildTempUbuntu)</Destination>
             <GpgKey></GpgKey>
@@ -91,27 +92,19 @@
             <Name>hashi-ui</Name>
             <Unzip>false</Unzip>
         </HttpFilesToCopy>
-
-
+        -->
     </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
         <FilesToCopy
-            Exclude="$(DirSrc)\Dockerfile"
-            Include="$(DirSrc)\**\*">
-            <Destination>$(DirBuildTempUbuntu)</Destination>
+            Exclude="$(DirSrcCookbooks)\$(NameCookbook)\metadata.rb;$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb"
+            Include="$(DirSrcCookbooks)\$(NameCookbook)\**\*.*">
+            <Destination>$(DirBuildTempCookbooks)\$(NameCookbook)</Destination>
         </FilesToCopy>
     </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadArchiveFilesToCopy)' == 'true' ">
-        <!--
-        <ArchiveFilesToCopy Include="">
-            <Destination></Destination>
-            <GpgKey></GpgKey>
-            <Hash></Hash>
-            <HashAlgorithm></HashAlgorithm>
-            <HashFile></HashFile>
-            <SignatureFile></SignatureFile>
+        <ArchiveFilesToCopy Include="$(RepositoryArchive)\Base.Linux-$(VersionLinuxBaseResource).zip">
+            <Destination>$(DirBuildTempVmBase)</Destination>
         </ArchiveFilesToCopy>
-        -->
     </ItemGroup>
 
 
@@ -152,11 +145,18 @@
         Additional parameters can be provided through the 'TemplateTokens' ItemGroup below.
     -->
     <ItemGroup Condition=" '$(ShouldLoadBuildFilesToGenerate)' == 'true' ">
-        <BuildFilesToGenerate
-            Condition=" '$(DirBuildTemp)' != '' "
-            Include="$(DirBuildTempUbuntu)\Dockerfile">
-            <Encoding>UTF-8</Encoding>
-            <Template>$(DirSrc)\Dockerfile</Template>
+        <BuildFilesToGenerate Include="$(DirBuildTempCookbooks)\$(NameCookbook)\metadata.rb">
+            <Template>$(DirSrcCookbooks)\$(NameCookbook)\metadata.rb</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate Include="$(DirBuildTempCookbooks)\$(NameCookbook)\attributes\resource_information.rb">
+            <Template>$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+
+        <BuildFilesToGenerate Include="$(DirBuildTemp)\packer_variables.json">
+            <Template>$(DirSrcPacker)\packer_variables.json</Template>
+            <Encoding></Encoding>
         </BuildFilesToGenerate>
     </ItemGroup>
 
@@ -463,10 +463,7 @@
         The collection of files that should be analyzed with Rubocop
     -->
     <ItemGroup Condition=" '$(ShouldLoadRubocopConfigurationFiles)' == 'true' ">
-        <!-->
-        <RubocopConfigurationFiles Include="">
-        </RubocopConfigurationFiles>
-        -->
+        <RubocopConfigurationFiles Include="$(DirSrcCookbooks)\rubocop.yml" />
     </ItemGroup>
 
 
@@ -477,11 +474,13 @@
         The collection of cookbooks that should be analyzed with Foodcritic
     -->
     <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToAnalyze)' == 'true' ">
-        <!--
-        <ChefCookbooksToAnalyze Include="">
-            <RulesToExclude></RulesToExclude>
+        <ChefCookbooksToAnalyze Include="$(DirBuildTempCookbooks)\$(NameCookbook)" >
+            <!--
+                Ignore:
+                FC071 - Missing LICENSE file: because it's there, just not in the expected directory
+            -->
+            <RulesToExclude>FC071</RulesToExclude>
         </ChefCookbooksToAnalyze>
-        -->
     </ItemGroup>
 
 
@@ -492,11 +491,9 @@
         The collection of cookbooks that should be tested with ChefSpec.
     -->
     <ItemGroup Condition=" '$(ShouldLoadChefCookbooksToTest)' == 'true' ">
-        <!--
-        <ChefCookbooksToTest Include="">
+        <ChefCookbooksToTest Include="$(DirBuildTempCookbooks)\$(NameCookbook)">
             <ChefSpecPattern>./spec/*_spec.rb</ChefSpecPattern>
         </ChefCookbooksToTest>
-        -->
     </ItemGroup>
 
 
@@ -915,6 +912,20 @@
             </PostSteps>
         </BuildStepsToExecute>
 
+        <BuildStepsToExecute Include="$(BuildStepsPrepareRestoreBerkshelf)">
+            <Properties>
+            </Properties>
+            <Groups>
+                prepare;
+                prepare.restore;
+                prepare.restore.cookbooks;
+            </Groups>
+            <PreSteps>
+            </PreSteps>
+            <PostSteps>
+            </PostSteps>
+        </BuildStepsToExecute>
+
         <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildVisualStudioSolution)">
             <Properties>
@@ -1093,6 +1104,7 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+        -->
         <BuildStepsToExecute Include="$(BuildStepsPackPacker)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -1107,7 +1119,8 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
-        -->
+
+        <!--
         <BuildStepsToExecute Include="$(BuildStepsPackDocker)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -1122,6 +1135,7 @@
             <PostSteps>
             </PostSteps>
         </BuildStepsToExecute>
+        -->
         <!--
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>

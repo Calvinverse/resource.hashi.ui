@@ -143,15 +143,13 @@
         All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
     <ItemGroup Condition=" '$(ShouldLoadPackerImagesToBuild)' == 'true' ">
-        <!--
         <PackerImagesToBuild
-            Condition=" '$(DirWorkspace)' != '' "
-            Include="$(DirWorkspace)\**\*.json">
+            Condition=" '$(DirSrcPacker)' != '' AND '$(IsBuild)' == 'true'  "
+            Include="$(DirSrcPacker)\packer.json">
             <Variables>
-                $(DirBuildTemp)\variables.json
+                $(DirBuildTemp)\packer_variables.json
             </Variables>
         </PackerImagesToBuild>
-        -->
     </ItemGroup>
 
 
@@ -159,9 +157,11 @@
         **** DOCKER - PACK ****
     -->
     <ItemGroup Condition=" '$(ShouldLoadDockerImagesToBuild)' == 'true' ">
+        <!--
         <DockerImagesToBuild Include="$(DirBuildTempUbuntu)">
             <Tags>${DockerTargetRepository}/${CompanyNameInFilePath}/$(ProductName.ToLower()):${VersionSemantic}</Tags>
         </DockerImagesToBuild>
+        -->
     </ItemGroup>
 
 
