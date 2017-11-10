@@ -5,7 +5,7 @@ Describe 'The firewall' {
         It 'should return a status' {
             $ufwOutput | Should Not Be $null
             $ufwOutput.GetType().FullName | Should Be 'System.Object[]'
-            $ufwOutput.Length | Should Be 35
+            $ufwOutput.Length | Should Be 27
         }
 
         It 'should be enabled' {
@@ -49,25 +49,9 @@ Describe 'The firewall' {
         }
     }
 
-    Context 'should allow fabio' {
-        It 'on port 80' {
-            ($ufwOutput | Where-Object {$_ -match '(80/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-
-        It 'on port 443' {
-            ($ufwOutput | Where-Object {$_ -match '(443/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-
-        It 'on port 7080' {
-            ($ufwOutput | Where-Object {$_ -match '(7080/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-
-        It 'on port 7443' {
-            ($ufwOutput | Where-Object {$_ -match '(7443/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-
-        It 'on port 9998' {
-            ($ufwOutput | Where-Object {$_ -match '(9998/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
+    Context 'should allow hashi-ui' {
+        It 'on port 3000' {
+            ($ufwOutput | Where-Object {$_ -match '(3000/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
         }
     }
 

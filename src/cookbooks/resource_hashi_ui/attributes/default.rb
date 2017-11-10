@@ -67,7 +67,6 @@ default['firewall']['ipv6_enabled'] = false
 #
 
 default['hashiui']['install_path'] = '/usr/local/bin/hashiui'
-default['hashiui']['conf_dir'] = '/etc/hashiui.d'
 default['hashiui']['service_name'] = 'hashiui'
 
 default['hashiui']['port'] = 3000

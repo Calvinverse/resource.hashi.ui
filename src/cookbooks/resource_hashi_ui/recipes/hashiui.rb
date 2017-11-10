@@ -14,15 +14,6 @@ poise_service_user hashiui_user do
 end
 
 #
-# DIRECTORIES
-#
-
-hashiui_config_path = node['hashiui']['conf_dir']
-directory hashiui_config_path do
-  action :create
-end
-
-#
 # INSTALL FABIO
 #
 

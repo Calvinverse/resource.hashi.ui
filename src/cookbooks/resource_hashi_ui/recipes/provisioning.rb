@@ -46,7 +46,7 @@ file '/etc/init.d/provision.sh' do
       # Generate a 16 character password
       POSTFIX=$(pwgen --no-capitalize 16 1)
 
-      NAME="cvproxyedge-${RESOURCE_VERSION_MAJOR}-${RESOURCE_VERSION_MINOR}-${RESOURCE_VERSION_PATCH}-${POSTFIX}"
+      NAME="cvhashiui-${RESOURCE_VERSION_MAJOR}-${RESOURCE_VERSION_MINOR}-${RESOURCE_VERSION_PATCH}-${POSTFIX}"
       sudo hostnamectl set-hostname $NAME
     }
 
@@ -115,7 +115,7 @@ file '/etc/init.d/provision.sh' do
 
       CONSUL_DOMAIN=$(f_getConsulDomain)
 
-      echo "\"NOMAD_ADDR=http://http.nomad.service.${CONSUL_DOMAIN}\"" > /etc/environment
+      echo "\"NOMAD_ADDR=http://http.nomad.service.${CONSUL_DOMAIN}:4646\"" >> /etc/environment
 
       #
       # UNBOUND CONFIGURATION
