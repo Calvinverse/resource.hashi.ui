@@ -14,7 +14,7 @@ poise_service_user hashiui_user do
 end
 
 #
-# INSTALL FABIO
+# INSTALL HASHI-UI
 #
 
 hashiui_install_path = node['hashiui']['install_path']

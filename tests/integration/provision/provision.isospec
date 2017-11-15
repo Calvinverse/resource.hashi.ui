@@ -7,8 +7,6 @@
         <file src="${DirTestsIntegration}\provision\shared\consul\*.*" target="consul" />
         <file src="${DirTestsIntegration}\provision\shared\consul\client\*.*" target="consul\client" />
 
-        <file src="${DirTestsIntegration}\provision\shared\hashiui\*.*" target="hashiui" />
-
         <file src="${DirTestsIntegration}\provision\shared\unbound\*.*" target="unbound" />
     </files>
 </iso>

@@ -107,7 +107,7 @@ file '/etc/init.d/provision.sh' do
       # HASHI-UI CONFIGURATION
       #
       # Copy the script that will be used to determine the Nomad address environment variable
-      cp -a /mnt/dvd/hashiui/get_consul_domain.sh /tmp/get_consul_domain.sh
+      cp -a /mnt/dvd/get_consul_domain.sh /tmp/get_consul_domain.sh
       dos2unix /tmp/get_consul_domain.sh
 
       # Run the script that creates determines the consul domain
