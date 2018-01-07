@@ -54,6 +54,13 @@
             "type": "shell"
         },
         {
+            "expect_disconnect": false,
+            "inline": [
+                "echo '{{user `admin_password`}}' | sudo -S -E mkdir -m 777 /test"
+            ],
+            "type": "shell"
+        },
+        {
             "destination": "/test/pester",
             "source": "{{ user `dir_temp` }}/tests/integration/pester",
             "type": "file"
