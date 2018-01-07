@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 #
+# CONSULTEMPLATE
 #
 
+default['consul_template']['config_path'] = '/etc/consul-template.d/conf'
+default['consul_template']['template_path'] = '/etc/consul-template.d/templates'
 
 #
 # FIREWALL
@@ -32,6 +35,9 @@ default['hashiui']['proxy_path'] = '/dashboards/consul'
 
 default['hashiui']['service_user'] = 'hashiui'
 default['hashiui']['service_group'] = 'hashiui'
+
+default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
+default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
 hashiui_version = '0.22.0'
