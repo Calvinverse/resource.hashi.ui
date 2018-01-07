@@ -27,7 +27,7 @@ WantedBy=multi-user.target
 [Service]
 ExecStart=/usr/local/bin/hashiui --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul
 User=hashiui
-EnvironmentFile=/etc/environment
+EnvironmentFile=/etc/hashiui_environment
 Restart=on-failure
 
 '@
