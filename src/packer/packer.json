@@ -6,6 +6,7 @@
         "dir_cookbooks_src": "src/cookbooks",
         "dir_cookbooks_vendors": "packages/vendor/cookbooks",
         "dir_http_user": null,
+        "dir_src_provisioning": "src/provisioning",
         "dir_temp": null,
         "dir_vm_import": null,
 
@@ -55,16 +56,14 @@
             "type": "shell-local"
         },
         {
-            "execute_command": "echo '{{ user `admin_password` }}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline": [
-                "echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
-            ],
-            "type": "shell"
+            "destination": "/etc/unbound.d/unbound_zones",
+            "source": "{{ user `dir_temp` }}/tests/integration/pester",
+            "type": "file"
         },
         {
-            "expect_disconnect": true,
+            "expect_disconnect": false,
             "inline": [
-                "sudo -S -E apt-get install --assume-yes curl"
+                "sudo systemctl restart unbound"
             ],
             "type": "shell"
         },
@@ -74,11 +73,19 @@
             ],
             "execute_command": "sudo chef-solo --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
             "guest_os_type": "unix",
-            "install_command": "curl -LO https://omnitruck.chef.io/install.sh && {{if .Sudo}}sudo{{end}} bash ./install.sh -v 13.1.31 && rm install.sh",
+            "install_command": "",
             "run_list": [
                 "resource_hashi_ui::default"
             ],
             "type": "chef-solo"
+        },
+        {
+            "expect_disconnect": false,
+            "inline": [
+                "sudo dpkg -P chef",
+                "sudo rm -rf /etc/unbound.d/unbound_zones"
+            ],
+            "type": "shell"
         }
     ]
 }
