@@ -8,6 +8,7 @@
 #
 
 resource_name = node['resource']['name']
+resource_short_name = node['resource']['name_short']
 ruby_block 'set_environment_product_name' do
   block do
     file = Chef::Util::FileEdit.new('/etc/environment')

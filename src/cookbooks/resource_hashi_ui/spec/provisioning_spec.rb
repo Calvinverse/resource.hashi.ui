@@ -11,4 +11,3 @@ describe 'resource_hashi_ui::provisioning' do
     end
   end
 end
-
