@@ -231,7 +231,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <VersionLinuxBaseResource>0.1.2</VersionLinuxBaseResource>
+        <VersionLinuxBaseResource>0.2.0</VersionLinuxBaseResource>
     </PropertyGroup>
 
 
