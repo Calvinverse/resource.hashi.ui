@@ -75,7 +75,9 @@ describe 'resource_hashi_ui::hashiui' do
   end
 
   context 'adds the consul-template files for vault' do
-    vault_metrics_template_content = <<~CONF
+    let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
+
+    hashiui_template_content = <<~CONF
       NOMAD_ADDR=http://{{ keyOrDefault "config/services/nomad/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/nomad/port" "4646" }}
     CONF
     it 'creates hashiui template file in the consul-template template directory' do

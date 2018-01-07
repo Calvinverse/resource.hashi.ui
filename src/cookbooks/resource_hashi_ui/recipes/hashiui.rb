@@ -107,6 +107,9 @@ end
 # CONSUL-TEMPLATE FILES
 #
 
+consul_template_config_path = node['consul_template']['config_path']
+consul_template_template_path = node['consul_template']['template_path']
+
 # region.hcl
 hashiui_template_file = node['hashiui']['consul_template_file']
 file "#{consul_template_template_path}/#{hashiui_template_file}" do
