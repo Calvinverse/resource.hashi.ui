@@ -530,6 +530,9 @@
     -->
     <ItemGroup Condition=" '$(ShouldLoadTemplateTokens)' == 'true' ">
         <!-- General -->
+        <TemplateTokens Include="ProductShortName">
+            <ReplacementValue>$(ProductName.SubString('Resource.'.Length).Replace('.', '-').ToLower())</ReplacementValue>
+        </TemplateTokens>
         <TemplateTokens Include="LocalAdministratorName">
             <ReplacementValue>thebigkahuna</ReplacementValue>
         </TemplateTokens>
