@@ -75,7 +75,7 @@
             ],
             "execute_command": "sudo chef-solo --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
             "guest_os_type": "unix",
-            "install_command": "",
+            "install_command": "echo \"Do nothing because chef should already be installed\"",
             "run_list": [
                 "resource_hashi_ui::default"
             ],
