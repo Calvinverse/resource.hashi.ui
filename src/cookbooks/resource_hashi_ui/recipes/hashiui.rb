@@ -115,7 +115,7 @@ hashiui_template_file = node['hashiui']['consul_template_file']
 file "#{consul_template_template_path}/#{hashiui_template_file}" do
   action :create
   content <<~CONF
-    NOMAD_ADDR=http://{{ keyOrDefault "config/services/nomad/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/nomad/port" "4646" }}
+    NOMAD_ADDR=http://{{ keyOrDefault "config/services/nomad/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/nomad/protocols/http/port" "4646" }}
   CONF
   mode '755'
 end
