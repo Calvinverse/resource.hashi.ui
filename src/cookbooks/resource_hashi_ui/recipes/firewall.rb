@@ -10,10 +10,3 @@
 firewall 'default' do
   action :install
 end
-
-firewall_rule 'ssh' do
-  command :allow
-  description 'Allow SSH traffic'
-  dest_port 22
-  direction :in
-end
