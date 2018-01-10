@@ -18,8 +18,6 @@ end
 
 include_recipe 'resource_hashi_ui::firewall'
 
-include_recipe 'resource_hashi_ui::consul'
 include_recipe 'resource_hashi_ui::meta'
-include_recipe 'resource_hashi_ui::network'
-include_recipe 'resource_hashi_ui::provisioning'
 include_recipe 'resource_hashi_ui::hashiui'
+include_recipe 'resource_hashi_ui::provisioning'
