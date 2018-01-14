@@ -43,3 +43,24 @@ default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 hashiui_version = '0.22.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
 default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
+
+#
+# VAULT-UI
+#
+
+default['vaultui']['install_path'] = '/opt/vaultui'
+default['vaultui']['service_name'] = 'vaultui'
+
+default['vaultui']['port'] = 8000
+default['vaultui']['proxy_path'] = '/dashboards/vault'
+
+default['vaultui']['service_user'] = 'vaultui'
+default['vaultui']['service_group'] = 'vaultui'
+
+default['vaultui']['consul_template_file'] = 'vaultui.ctmpl'
+default['vaultui']['environment_file'] = '/etc/vaultui_environment'
+
+# Installation source
+vaultui_version = '0.22.0'
+default['vaultui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{vaultui_version}/hashi-ui-linux-amd64"
+default['vaultui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
