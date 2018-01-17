@@ -45,6 +45,14 @@ default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/
 default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
 
 #
+# NODE-JS
+#
+
+default['nodejs']['install_method'] = 'binary'
+default['nodejs']['version'] = '8.9.4'
+default['nodejs']['binary']['checksum'] = ''
+
+#
 # VAULT-UI
 #
 
