@@ -50,7 +50,7 @@ default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310
 
 default['nodejs']['install_method'] = 'binary'
 default['nodejs']['version'] = '8.9.4'
-default['nodejs']['binary']['checksum'] = ''
+default['nodejs']['binary']['checksum'] = '68B94AAC38CD5D87AB79C5B38306E34A20575F31A3EA788D117C20FFFCCA3370'
 
 #
 # VAULT-UI

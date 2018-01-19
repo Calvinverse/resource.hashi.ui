@@ -9,30 +9,32 @@
 
 # Configure the service user under which vaultui will be run
 vaultui_user = node['vaultui']['service_user']
+vaultui_group = node['vaultui']['service_group']
 poise_service_user vaultui_user do
-  group node['vaultui']['service_group']
+  group vaultui_group
 end
-
-
-
-# Install NODE
-
-# Install Yarn
-
 
 #
 # INSTALL VAULT-UI
 #
 
 vaultui_install_path = node['vaultui']['install_path']
-
-remote_file 'vaultui_release_binary' do
-  path vaultui_install_path
-  source node['vaultui']['release_url']
-  checksum node['vaultui']['checksum']
-  owner 'root'
-  mode '0755'
+remote_directory vaultui_install_path do
   action :create
+  group vaultui_group
+  owner 'root'
+  mode '0775'
+  source 'vault-ui-2.4.0-rc3'
+end
+
+yarn_install vaultui_install_path do
+  action :run
+  user vaultui_user
+end
+
+yarn_run 'build-web' do
+  dir vaultui_install_path
+  user vaultui_user
 end
 
 # Create the systemd service for scollector. Set it to depend on the network being up
@@ -92,7 +94,7 @@ file '/etc/consul/conf.d/vaultui.json' do
               "id": "vaultui_ping",
               "interval": "15s",
               "method": "GET",
-              "name": "Hashi-UI ping",
+              "name": "Vault-UI ping",
               "timeout": "5s"
             }
           ],
@@ -122,7 +124,7 @@ vaultui_template_file = node['vaultui']['consul_template_file']
 file "#{consul_template_template_path}/#{vaultui_template_file}" do
   action :create
   content <<~CONF
-  VAULT_URL_DEFAULT=http://{{ keyOrDefault "config/services/vault/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/vault/protocols/http/port" "4646" }}
+    VAULT_URL_DEFAULT=http://{{ keyOrDefault "config/services/vault/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/vault/protocols/http/port" "8200" }}
   CONF
   mode '755'
 end

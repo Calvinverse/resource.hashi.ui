@@ -74,11 +74,11 @@ describe 'resource_hashi_ui::hashiui' do
     end
   end
 
-  context 'adds the consul-template files for vault' do
+  context 'adds the consul-template files for hashi-ui' do
     let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
 
     hashiui_template_content = <<~CONF
-      NOMAD_ADDR=http://{{ keyOrDefault "config/services/nomad/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/nomad/protocols/http/port" "4646" }}
+      NOMAD_ADDR=http://{{ keyOrDefault "config/services/jobs/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/jobs/protocols/http/port" "4646" }}
     CONF
     it 'creates hashiui template file in the consul-template template directory' do
       expect(chef_run).to create_file('/etc/consul-template.d/templates/hashiui.ctmpl')
