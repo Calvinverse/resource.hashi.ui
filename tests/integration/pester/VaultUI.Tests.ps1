@@ -25,8 +25,9 @@ Documentation=https://github.com/djenriquez/vault-ui
 WantedBy=multi-user.target
 
 [Service]
-ExecStart=cd /opt/vaultui && node ./server.js
+ExecStart=/usr/local/bin/node ./server.js
 User=vaultui
+WorkingDirectory=/opt/vaultui
 EnvironmentFile=/etc/vaultui_environment
 Restart=on-failure
 
@@ -42,7 +43,13 @@ Restart=on-failure
             $systemctlOutput[0] | Should Match 'vaultui.service - Vault-UI'
         }
 
-        # It won't be possible to start the service in a test environment because vault-ui will
-        # expect vault to be alive.
+        It 'that is enabled' {
+            $systemctlOutput[1] | Should Match 'Loaded:\sloaded\s\(.*;\senabled;.*\)'
+
+        }
+
+        It 'and is running' {
+            $systemctlOutput[2] | Should Match 'Active:\sactive\s\(running\).*'
+        }
     }
 }

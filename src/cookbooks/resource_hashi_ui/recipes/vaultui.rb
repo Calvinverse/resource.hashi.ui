@@ -52,9 +52,10 @@ systemd_service vaultui_service_name do
   end
   requires %w[network-online.target]
   service do
-    exec_start "cd #{vaultui_install_path} && node ./server.js"
-    restart 'on-failure'
     environment_file vaultui_env_file
+    exec_start '/usr/local/bin/node ./server.js'
+    restart 'on-failure'
+    working_directory vaultui_install_path
   end
   user vaultui_user
 end
