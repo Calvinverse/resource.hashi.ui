@@ -8,7 +8,7 @@ describe 'resource_hashi_ui::hashiui' do
     it 'installs the hashi-ui binaries' do
       expect(chef_run).to create_remote_file('hashiui_release_binary').with(
         path: '/usr/local/bin/hashiui',
-        source: 'https://github.com/jippi/hashi-ui/releases/download/v0.22.0/hashi-ui-linux-amd64'
+        source: 'https://github.com/jippi/hashi-ui/releases/download/v0.23.0/hashi-ui-linux-amd64'
       )
     end
 

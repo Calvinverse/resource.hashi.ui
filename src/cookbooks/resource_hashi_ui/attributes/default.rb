@@ -40,9 +40,9 @@ default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
 default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
-hashiui_version = '0.22.0'
+hashiui_version = '0.23.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
+default['hashiui']['checksum'] = '64700352FD75DA47502C954B8B2912BED22DCE44823A20E81AE8F2EA52530F5C'
 
 #
 # NODE-JS
@@ -67,8 +67,3 @@ default['vaultui']['service_group'] = 'vaultui'
 
 default['vaultui']['consul_template_file'] = 'vaultui.ctmpl'
 default['vaultui']['environment_file'] = '/etc/vaultui_environment'
-
-# Installation source
-vaultui_version = '0.22.0'
-default['vaultui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{vaultui_version}/hashi-ui-linux-amd64"
-default['vaultui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
