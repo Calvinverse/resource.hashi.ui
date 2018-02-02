@@ -52,4 +52,13 @@ Restart=on-failure
             $systemctlOutput[2] | Should Match 'Active:\sactive\s\(running\).*'
         }
     }
+
+    Context 'can be contacted' {
+        $response = Invoke-WebRequest -Uri http://localhost:8000 -UseBasicParsing
+        $webPage = $response.Content
+        It 'responds to HTTP calls' {
+            $response.StatusCode | Should Be 200
+            $webPage | Should Not Be $null
+        }
+    }
 }

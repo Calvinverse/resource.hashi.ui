@@ -37,7 +37,7 @@ function Install-Vault
         [string] $vaultVersion
     )
 
-    & wget "https://releases.hashicorp.com/vault/$($vaultVersion)/vault_$($vaultVersion)_linux_amd64.zip" --silent --output /test/vault.zip
+    & wget "https://releases.hashicorp.com/vault/$($vaultVersion)/vault_$($vaultVersion)_linux_amd64.zip" --output-document /test/vault.zip
     & unzip /test/vault.zip -d /test/vault
 }
 
