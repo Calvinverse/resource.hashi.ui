@@ -65,11 +65,12 @@ function Set-ConsulKV
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/datacenter 'test-integration'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/domain 'integrationtest'
 
-    # Load config/services/metrics
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/protocols/opentsdb/host 'opentsdb.metrics'
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/protocols/opentsdb/port '4242'
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/protocols/statsd/host 'statsd.metrics'
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/protocols/statsd/port '1234'
+    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/metrics/statsd/rules '"consul.*.*.* .measurement.measurement.field",'
+
+    # Explicitly don't provide a metrics address because that means telegraf will just send the metrics to
+    # a black hole
+    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/databases/system 'system'
+    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/metrics/databases/statsd 'services'
 
     # Load config/services/jobs
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/bootstrap '1'
@@ -81,6 +82,8 @@ function Set-ConsulKV
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/tls/verify 'false'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/vault/enabled 'false'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/vault/ts/skip 'true'
+
+    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/metrics/statsd/rules '"nomad.*.*.* .measurement.measurement.field",'
 
     # load config/services/queue
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/queue/protocols/http/host 'http.queue'
