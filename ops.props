@@ -555,6 +555,10 @@
         </TemplateTokens>
 
         <!-- For the Packer config -->
+        <TemplateTokens Include="NameCookbook">
+            <ReplacementValue>$(NameCookbook)</ReplacementValue>
+        </TemplateTokens>
+
         <TemplateTokens Include="DirDeployJsonEscaped">
             <ReplacementValue>$(DirBuildDeploy.Replace('\', '/'))</ReplacementValue>
         </TemplateTokens>

@@ -83,16 +83,14 @@
         -->
     </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadHttpFilesToCopy)' == 'true' ">
-        <!--
-        <HttpFilesToCopy Include="https://github.com/jippi/hashi-ui/releases/download/v${VersionHashiUI}/hashi-ui-linux-amd64">
-            <Destination>$(DirBuildTempUbuntu)</Destination>
-            <GpgKey></GpgKey>
+        <HttpFilesToCopy Include="https://github.com/djenriquez/vault-ui/archive/2.4.0-rc3.zip">
+            <Destination>$(DirBuildTempCookbooks)\$(NameCookbook)\files\default</Destination>
+            <GpgKey>70D2AD94934EC18486D08B0CCAD036E5DB1E532D79BAEC12882F19F0D7E03772</GpgKey>
             <HashAlgorithm>SHA256</HashAlgorithm>
-            <Hash>F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85</Hash>
-            <Name>hashi-ui</Name>
-            <Unzip>false</Unzip>
+            <HashFile></HashFile>
+            <SignatureFile></SignatureFile>
+            <Unzip>true</Unzip>
         </HttpFilesToCopy>
-        -->
     </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
         <FilesToCopy

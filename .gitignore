@@ -4,3 +4,4 @@ build/logs/
 build/configurations/
 berks/
 build/deploy/
+src/cookbooks/resource_hashi_ui/Gemfile.lock

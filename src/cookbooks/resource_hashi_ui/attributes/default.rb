@@ -40,6 +40,30 @@ default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
 default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
-hashiui_version = '0.22.0'
+hashiui_version = '0.23.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
+default['hashiui']['checksum'] = '64700352FD75DA47502C954B8B2912BED22DCE44823A20E81AE8F2EA52530F5C'
+
+#
+# NODE-JS
+#
+
+default['nodejs']['install_method'] = 'binary'
+default['nodejs']['version'] = '8.9.4'
+default['nodejs']['binary']['checksum'] = '68B94AAC38CD5D87AB79C5B38306E34A20575F31A3EA788D117C20FFFCCA3370'
+
+#
+# VAULT-UI
+#
+
+default['vaultui']['install_path'] = '/opt/vaultui'
+default['vaultui']['service_name'] = 'vaultui'
+
+default['vaultui']['port'] = 8000
+default['vaultui']['proxy_path'] = '/dashboards/vault'
+
+default['vaultui']['service_user'] = 'vaultui'
+default['vaultui']['service_group'] = 'vaultui'
+
+default['vaultui']['consul_template_file'] = 'vaultui.ctmpl'
+default['vaultui']['environment_file'] = '/etc/vaultui_environment'
