@@ -17,7 +17,10 @@ function Initialize-Environment
     Install-Vault -vaultVersion '0.9.1'
     Start-TestVault
 
-    Write-Output "Waiting for 10 seconds for consul and vault to start ..."
+    Install-Nomad -nomadVersion '0.7.1'
+    Start-TestNomad
+
+    Write-Output "Waiting for 10 seconds for consul, nomad and vault to start ..."
     Start-Sleep -Seconds 10
 
     Join-Cluster
@@ -27,6 +30,17 @@ function Initialize-Environment
 
     Write-Output "Giving consul-template 30 seconds to process the data ..."
     Start-Sleep -Seconds 30
+}
+
+function Install-Nomad
+{
+    [CmdletBinding()]
+    param(
+        [string] $nomadVersion
+    )
+
+    & wget "https://releases.hashicorp.com/nomad/$($nomadVersion)/nomad_$($nomadVersion)_linux_amd64.zip" --output-document /test/nomad.zip
+    & unzip /test/nomad.zip -d /test/nomad
 }
 
 function Install-Vault
@@ -48,7 +62,7 @@ function Join-Cluster
     $ipAddress = Get-IpAddress
     Write-Output "Joining: $($ipAddress):8351"
 
-    Start-Process -FilePath "consul" -ArgumentList "join $($ipAddress):8351"
+    Start-Process -FilePath 'consul' -ArgumentList "join $($ipAddress):8351"
 
     Write-Output "Getting members for client"
     & consul members
@@ -65,7 +79,7 @@ function Set-ConsulKV
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/datacenter 'test-integration'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/domain 'integrationtest'
 
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/metrics/statsd/rules '\"consul.*.*.* .measurement.measurement.field\",'
+    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/consul/statsd/rules '\"*.*.* measurement.measurement.field\",'
 
     # Explicitly don't provide a metrics address because that means telegraf will just send the metrics to
     # a black hole
@@ -82,8 +96,6 @@ function Set-ConsulKV
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/tls/verify 'false'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/vault/enabled 'false'
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/vault/ts/skip 'true'
-
-    & consul kv put -http-addr=http://127.0.0.1:8550 config/services/jobs/metrics/statsd/rules '\"nomad.*.*.* .measurement.measurement.field\",'
 
     # load config/services/queue
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/queue/protocols/http/host 'http.queue'
@@ -112,6 +124,11 @@ function Set-VaultSecrets
 
 function Start-TestConsul
 {
+    [CmdletBinding()]
+    param(
+        [string] $consulVersion
+    )
+
     if (-not (Test-Path /test/consul))
     {
         New-Item -Path /test/consul -ItemType Directory | Out-Null
@@ -126,8 +143,26 @@ function Start-TestConsul
         -RedirectStandardError /test/consul/error.out
 }
 
+function Start-TestNomad
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    Write-Output "Starting nomad ..."
+    Start-Process `
+        -FilePath "/test/nomad/nomad" `
+        -ArgumentList 'agent -config=/test/pester/environment/nomad.hcl' `
+        -RedirectStandardOutput /test/nomad/output.out `
+        -RedirectStandardError /test/nomad/error.out
+}
+
 function Start-TestVault
 {
+    [CmdletBinding()]
+    param(
+    )
+
     Write-Output "Starting vault ..."
     Start-Process `
         -FilePath "/test/vault/vault" `
