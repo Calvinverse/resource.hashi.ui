@@ -50,8 +50,6 @@ systemd_service hashiui_service_name do
   user hashiui_user
 end
 
-# Make sure the hashi-ui service doesn't start automatically. This will be changed
-# after we have provisioned the box
 service hashiui_service_name do
   action :enable
 end
@@ -110,7 +108,6 @@ end
 consul_template_config_path = node['consul_template']['config_path']
 consul_template_template_path = node['consul_template']['template_path']
 
-# region.hcl
 hashiui_template_file = node['hashiui']['consul_template_file']
 file "#{consul_template_template_path}/#{hashiui_template_file}" do
   action :create

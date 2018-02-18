@@ -1,12 +1,12 @@
-Describe 'The vault-ui application' {
+Describe 'The goldfish application' {
     Context 'is installed' {
-        It 'with files in /opt/vaultui' {
-            '/opt/vaultui' | Should Exist
+        It 'with binaries in /usr/local/bin' {
+            '/usr/local/bin/goldfish' | Should Exist
         }
     }
 
     Context 'has been daemonized' {
-        $serviceConfigurationPath = '/etc/systemd/system/vaultui.service'
+        $serviceConfigurationPath = '/etc/systemd/system/goldfish.service'
         if (-not (Test-Path $serviceConfigurationPath))
         {
             It 'has a systemd configuration' {
@@ -16,31 +16,29 @@ Describe 'The vault-ui application' {
 
         $expectedContent = @'
 [Unit]
-Description=Vault-UI
+Description=Goldfish Vault UI
 Requires=network-online.target
 After=network-online.target
-Documentation=https://github.com/djenriquez/vault-ui
+Documentation=https://github.com/Caiyeon/goldfish
 
 [Install]
 WantedBy=multi-user.target
 
 [Service]
-ExecStart=/usr/local/bin/node ./server.js
-User=vaultui
-WorkingDirectory=/opt/vaultui
-EnvironmentFile=/etc/vaultui_environment
+ExecStart=/usr/local/bin/goldfish -config=/etc/goldfish/config.hcl
+User=goldfish
 Restart=on-failure
 
 '@
         $serviceFileContent = Get-Content $serviceConfigurationPath | Out-String
-        $systemctlOutput = & systemctl status vaultui
+        $systemctlOutput = & systemctl status goldfish
         It 'with a systemd service' {
             $serviceFileContent | Should Be ($expectedContent -replace "`r", "")
 
             $systemctlOutput | Should Not Be $null
             $systemctlOutput.GetType().FullName | Should Be 'System.Object[]'
             $systemctlOutput.Length | Should BeGreaterThan 3
-            $systemctlOutput[0] | Should Match 'vaultui.service - Vault-UI'
+            $systemctlOutput[0] | Should Match 'goldfish.service - Goldfish Vault UI'
         }
 
         It 'that is enabled' {
@@ -55,10 +53,8 @@ Restart=on-failure
 
     Context 'can be contacted' {
         $response = Invoke-WebRequest -Uri http://localhost:8000 -UseBasicParsing
-        $webPage = $response.Content
         It 'responds to HTTP calls' {
             $response.StatusCode | Should Be 200
-            $webPage | Should Not Be $null
         }
     }
 }
