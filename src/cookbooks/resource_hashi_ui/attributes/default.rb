@@ -62,6 +62,6 @@ default['goldfish']['config_path'] = '/etc/goldfish'
 default['goldfish']['config_file'] = "#{node['goldfish']['config_path']}/config.hcl"
 
 # Installation source
-goldfish_version = '0.8.0'
+goldfish_version = '0.9.0'
 default['goldfish']['release_url'] = "https://github.com/Caiyeon/goldfish/releases/download/v#{goldfish_version}/goldfish-linux-amd64"
-default['goldfish']['checksum'] = 'A5BAEF9131CD35F0B42AAA480AB915FAD547C04F7A8806C18EFBFCBC85838ACE'
+default['goldfish']['checksum'] = 'a716db6277afcac21a404b6155d0c52b1d633f27d39fba240aae4b9d67d70943'

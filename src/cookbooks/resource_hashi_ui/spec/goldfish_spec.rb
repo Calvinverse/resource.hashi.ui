@@ -12,7 +12,7 @@ describe 'resource_hashi_ui::goldfish' do
     it 'installs the goldfish binaries' do
       expect(chef_run).to create_remote_file('goldfish_release_binary').with(
         path: '/usr/local/bin/goldfish',
-        source: 'https://github.com/Caiyeon/goldfish/releases/download/v0.8.0/goldfish-linux-amd64'
+        source: 'https://github.com/Caiyeon/goldfish/releases/download/v0.9.0/goldfish-linux-amd64'
       )
     end
 
