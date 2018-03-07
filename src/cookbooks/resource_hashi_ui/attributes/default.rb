@@ -40,30 +40,28 @@ default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
 default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
-hashiui_version = '0.23.0'
+hashiui_version = '0.24.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = '64700352FD75DA47502C954B8B2912BED22DCE44823A20E81AE8F2EA52530F5C'
+default['hashiui']['checksum'] = '381F0F837B2213F1901CA11159AD9E57064EC035A3573C274B8280124EC36EB9'
 
 #
-# NODE-JS
+# GOLDFISH
 #
 
-default['nodejs']['install_method'] = 'binary'
-default['nodejs']['version'] = '8.9.4'
-default['nodejs']['binary']['checksum'] = '68B94AAC38CD5D87AB79C5B38306E34A20575F31A3EA788D117C20FFFCCA3370'
+default['goldfish']['install_path'] = '/usr/local/bin/goldfish'
+default['goldfish']['service_name'] = 'goldfish'
 
-#
-# VAULT-UI
-#
+default['goldfish']['port'] = 8000
+default['goldfish']['proxy_path'] = '/dashboards/vault'
 
-default['vaultui']['install_path'] = '/opt/vaultui'
-default['vaultui']['service_name'] = 'vaultui'
+default['goldfish']['service_user'] = 'goldfish'
+default['goldfish']['service_group'] = 'goldfish'
 
-default['vaultui']['port'] = 8000
-default['vaultui']['proxy_path'] = '/dashboards/vault'
+default['goldfish']['consul_template_file'] = 'goldfish.ctmpl'
+default['goldfish']['config_path'] = '/etc/goldfish'
+default['goldfish']['config_file'] = "#{node['goldfish']['config_path']}/config.hcl"
 
-default['vaultui']['service_user'] = 'vaultui'
-default['vaultui']['service_group'] = 'vaultui'
-
-default['vaultui']['consul_template_file'] = 'vaultui.ctmpl'
-default['vaultui']['environment_file'] = '/etc/vaultui_environment'
+# Installation source
+goldfish_version = '0.9.0'
+default['goldfish']['release_url'] = "https://github.com/Caiyeon/goldfish/releases/download/v#{goldfish_version}/goldfish-linux-amd64"
+default['goldfish']['checksum'] = 'a716db6277afcac21a404b6155d0c52b1d633f27d39fba240aae4b9d67d70943'

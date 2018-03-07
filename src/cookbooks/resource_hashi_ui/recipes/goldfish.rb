@@ -2,79 +2,88 @@
 
 #
 # Cookbook Name:: resource_hashi_ui
-# Recipe:: vaultui
+# Recipe:: goldfish
 #
 # Copyright 2017, P. van der Velde
 #
 
-# Configure the service user under which vaultui will be run
-vaultui_user = node['vaultui']['service_user']
-vaultui_group = node['vaultui']['service_group']
-poise_service_user vaultui_user do
-  group vaultui_group
+# Configure the service user under which vault will be run
+goldfish_user = node['goldfish']['service_user']
+poise_service_user goldfish_user do
+  group node['goldfish']['service_group']
 end
 
 #
-# INSTALL VAULT-UI
+# INSTALL HASHI-UI
 #
 
-vaultui_install_path = node['vaultui']['install_path']
-remote_directory vaultui_install_path do
-  action :create
-  group vaultui_group
+goldfish_install_path = node['goldfish']['install_path']
+
+remote_file 'goldfish_release_binary' do
+  path goldfish_install_path
+  source node['goldfish']['release_url']
+  checksum node['goldfish']['checksum']
   owner 'root'
-  mode '0775'
-  source 'vault-ui-2.4.0-rc3'
+  mode '0755'
+  action :create
 end
 
-yarn_install vaultui_install_path do
-  action :run
-  user vaultui_user
-end
-
-yarn_run 'build-web' do
-  dir vaultui_install_path
-  user vaultui_user
+goldfish_config_path = node['goldfish']['config_path']
+directory goldfish_config_path do
+  action :create
+  owner 'root'
+  mode '0755'
 end
 
 # Create the systemd service for scollector. Set it to depend on the network being up
 # so that it won't start unless the network stack is initialized and has an
 # IP address
-vaultui_service_name = node['vaultui']['service_name']
-vaultui_env_file = node['vaultui']['environment_file']
-systemd_service vaultui_service_name do
+goldfish_service_name = node['goldfish']['service_name']
+goldfish_config_file = node['goldfish']['config_file']
+systemd_service goldfish_service_name do
   action :create
   after %w[network-online.target]
-  description 'Vault-UI'
-  documentation 'https://github.com/djenriquez/vault-ui'
+  description 'Goldfish Vault UI'
+  documentation 'https://github.com/Caiyeon/goldfish'
   install do
     wanted_by %w[multi-user.target]
   end
   requires %w[network-online.target]
   service do
-    environment_file vaultui_env_file
-    exec_start '/usr/local/bin/node ./server.js'
+    exec_start "#{goldfish_install_path} -config=#{goldfish_config_file}"
     restart 'on-failure'
-    working_directory vaultui_install_path
   end
-  user vaultui_user
+  user goldfish_user
 end
 
-# Make sure the hashi-ui service doesn't start automatically. This will be changed
-# after we have provisioned the box
-service vaultui_service_name do
+service goldfish_service_name do
   action :enable
+end
+
+#
+# ALLOW GOLDFISH TO LOCK MEMORY WITH MLOCK
+#
+# See: https://www.vaultproject.io/guides/operations/production.html
+
+package 'libcap2-bin' do
+  action :install
+end
+
+execute 'allow goldfish to lock memory' do
+  action :run
+  command 'setcap cap_ipc_lock=+ep $(readlink -f $(which goldfish))'
+  not_if 'getcap $(readlink -f $(which goldfish))|grep cap_ipc_lock+ep'
 end
 
 #
 # ALLOW HASHI-UI THROUGH THE FIREWALL
 #
 
-vaultui_port = node['vaultui']['port']
+goldfish_port = node['goldfish']['port']
 firewall_rule 'http' do
   command :allow
   description 'Allow HTTP traffic'
-  dest_port vaultui_port
+  dest_port goldfish_port
   direction :in
 end
 
@@ -82,8 +91,8 @@ end
 # CONNECT TO CONSUL
 #
 
-vaultui_proxy_path = node['vaultui']['proxy_path']
-file '/etc/consul/conf.d/vaultui.json' do
+goldfish_proxy_path = node['goldfish']['proxy_path']
+file '/etc/consul/conf.d/goldfish.json' do
   action :create
   content <<~JSON
     {
@@ -91,21 +100,21 @@ file '/etc/consul/conf.d/vaultui.json' do
         {
           "checks": [
             {
-              "http": "http://localhost:#{vaultui_port}",
-              "id": "vaultui_ping",
+              "http": "http://localhost:#{goldfish_port}",
+              "id": "goldfish_status",
               "interval": "15s",
               "method": "GET",
-              "name": "Vault-UI ping",
+              "name": "Goldfish status",
               "timeout": "5s"
             }
           ],
           "enableTagOverride": false,
-          "id": "vaultui.dashboard",
+          "id": "goldfish.dashboard",
           "name": "dashboard",
-          "port": #{vaultui_port},
+          "port": #{goldfish_port},
           "tags": [
             "vault",
-            "edgeproxyprefix-#{vaultui_proxy_path} strip=#{vaultui_proxy_path}"
+            "edgeproxyprefix-#{goldfish_proxy_path} strip=#{goldfish_proxy_path}"
           ]
         }
       ]
@@ -121,16 +130,58 @@ consul_template_config_path = node['consul_template']['config_path']
 consul_template_template_path = node['consul_template']['template_path']
 
 # region.hcl
-vaultui_template_file = node['vaultui']['consul_template_file']
-file "#{consul_template_template_path}/#{vaultui_template_file}" do
+goldfish_template_file = node['goldfish']['consul_template_file']
+file "#{consul_template_template_path}/#{goldfish_template_file}" do
   action :create
   content <<~CONF
-    VAULT_URL_DEFAULT=http://{{ keyOrDefault "config/services/vault/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/vault/protocols/http/port" "8200" }}
+    # [Required] listener defines how goldfish will listen to incoming connections
+    listener "tcp" {
+      # [Required] [Format: "address", "address:port", or ":port"]
+      # goldfish's listening address and/or port. Simply ":443" would suffice.
+      address = ":#{goldfish_port}"
+
+      # [Optional] [Default: 0] [Allowed values: 0, 1]
+      # set to 1 to disable tls & https
+      tls_disable = 1
+
+      # [Optional] [Default: 0] [Allowed values: 0, 1]
+      # set to 1 to redirect port 80 to 443 (hard-coded port numbers)
+      tls_autoredirect = 0
+    }
+
+    # [Required] vault defines how goldfish should bootstrap to vault
+    vault {
+      # [Required] [Format: "protocol://address:port"]
+      # This is vault's address. Vault must be up before goldfish is deployed!
+      address = "http://{{ keyOrDefault "config/services/secrets/protocols/http/host" "unknown" }}.service.{{ keyOrDefault "config/services/consul/domain" "consul" }}:{{ keyOrDefault "config/services/secrets/protocols/http/port" "8200" }}"
+
+      # [Optional] [Default: 0] [Allowed values: 0, 1]
+      # Set this to 1 to skip verifying the certificate of vault (e.g. self-signed certs)
+      tls_skip_verify = 1
+
+      # [Required] [Default: "secret/goldfish"]
+      # This should be a generic secret endpoint where runtime settings are stored
+      # See wiki for what key values are required in this
+      runtime_config = "secret/goldfish"
+
+      # [Optional] [Default: "auth/approle/login"]
+      # You can omit this, unless you mounted approle somewhere weird
+      approle_login = "auth/approle/login"
+
+      # [Optional] [Default: "goldfish"]
+      # You can omit this if you already customized the approle ID to be 'goldfish'
+      approle_id = "goldfish"
+    }
+
+    # [Optional] [Default: 0] [Allowed values: 0, 1]
+    # Set to 1 to disable mlock. Implementation is similar to vault - see vault docs for details
+    # This option will be ignored on unsupported platforms (e.g Windows)
+    disable_mlock = 0
   CONF
   mode '755'
 end
 
-file "#{consul_template_config_path}/vaultui.hcl" do
+file "#{consul_template_config_path}/goldfish.hcl" do
   action :create
   content <<~HCL
     # This block defines the configuration for a template. Unlike other blocks,
@@ -140,12 +191,12 @@ file "#{consul_template_config_path}/vaultui.hcl" do
       # This is the source file on disk to use as the input template. This is often
       # called the "Consul Template template". This option is required if not using
       # the `contents` option.
-      source = "#{consul_template_template_path}/#{vaultui_template_file}"
+      source = "#{consul_template_template_path}/#{goldfish_template_file}"
 
       # This is the destination path on disk where the source template will render.
       # If the parent directories do not exist, Consul Template will attempt to
       # create them, unless create_dest_dirs is false.
-      destination = "#{vaultui_env_file}"
+      destination = "#{goldfish_config_file}"
 
       # This options tells Consul Template to create the parent directories of the
       # destination path if they do not exist. The default value is true.
@@ -155,7 +206,7 @@ file "#{consul_template_config_path}/vaultui.hcl" do
       # command will only run if the resulting template changes. The command must
       # return within 30s (configurable), and it must have a successful exit code.
       # Consul Template is not a replacement for a process monitor or init system.
-      command = "systemctl restart #{vaultui_service_name}"
+      command = "systemctl restart #{goldfish_service_name}"
 
       # This is the maximum amount of time to wait for the optional command to
       # return. Default is 30s.

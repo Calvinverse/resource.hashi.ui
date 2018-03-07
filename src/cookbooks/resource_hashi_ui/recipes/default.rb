@@ -21,7 +21,6 @@ include_recipe 'resource_hashi_ui::firewall'
 include_recipe 'resource_hashi_ui::meta'
 include_recipe 'resource_hashi_ui::hashiui'
 
-include_recipe 'resource_hashi_ui::node'
-include_recipe 'resource_hashi_ui::vaultui'
+include_recipe 'resource_hashi_ui::goldfish'
 
 include_recipe 'resource_hashi_ui::provisioning'
