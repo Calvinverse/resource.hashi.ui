@@ -1,50 +1,11 @@
 # frozen_string_literal: true
 
 #
-# CONSUL
+# CONSULTEMPLATE
 #
 
-default['consul']['version'] = '0.9.2'
-default['consul']['config']['domain'] = 'consulverse'
-
-# This is not a consul server node
-default['consul']['config']['server'] = false
-
-# For the time being don't verify incoming and outgoing TLS signatures
-default['consul']['config']['verify_incoming'] = false
-default['consul']['config']['verify_outgoing'] = false
-
-# Bind the client address to the local host. The advertise and bind addresses
-# will be set in a separate configuration file
-default['consul']['config']['client_addr'] = '127.0.0.1'
-
-# Do not allow consul to use the host information for the node id
-default['consul']['config']['disable_host_node_id'] = true
-
-# Disable remote exec
-default['consul']['config']['disable_remote_exec'] = true
-
-# Disable the update check
-default['consul']['config']['disable_update_check'] = true
-
-# Set the DNS configuration
-default['consul']['config']['dns_config'] = {
-  allow_stale: true,
-  max_stale: '87600h',
-  node_ttl: '10s',
-  service_ttl: {
-    '*': '10s'
-  }
-}
-
-# Always leave the cluster if we are terminated
-default['consul']['config']['leave_on_terminate'] = true
-
-# Send all logs to syslog
-default['consul']['config']['log_level'] = 'INFO'
-default['consul']['config']['enable_syslog'] = true
-
-default['consul']['config']['owner'] = 'root'
+default['consul_template']['config_path'] = '/etc/consul-template.d/conf'
+default['consul_template']['template_path'] = '/etc/consul-template.d/templates'
 
 #
 # FIREWALL
@@ -75,22 +36,32 @@ default['hashiui']['proxy_path'] = '/dashboards/consul'
 default['hashiui']['service_user'] = 'hashiui'
 default['hashiui']['service_group'] = 'hashiui'
 
+default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
+default['hashiui']['environment_file'] = '/etc/hashiui_environment'
+
 # Installation source
-hashiui_version = '0.22.0'
+hashiui_version = '0.24.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = 'F8489334E6FD187E75E20F5241D615EAE07EA809160310C32B96448AA391AB85'
+default['hashiui']['checksum'] = '381F0F837B2213F1901CA11159AD9E57064EC035A3573C274B8280124EC36EB9'
 
 #
-# PROVISIONING
+# GOLDFISH
 #
 
-#
-# UNBOUND
-#
+default['goldfish']['install_path'] = '/usr/local/bin/goldfish'
+default['goldfish']['service_name'] = 'goldfish'
 
-default['unbound']['service_user'] = 'unbound'
-default['unbound']['service_group'] = 'unbound'
+default['goldfish']['port'] = 8000
+default['goldfish']['proxy_path'] = '/dashboards/vault'
 
-default['paths']['unbound_config'] = '/etc/unbound.d'
+default['goldfish']['service_user'] = 'goldfish'
+default['goldfish']['service_group'] = 'goldfish'
 
-default['file_name']['unbound_config_file'] = 'unbound.conf'
+default['goldfish']['consul_template_file'] = 'goldfish.ctmpl'
+default['goldfish']['config_path'] = '/etc/goldfish'
+default['goldfish']['config_file'] = "#{node['goldfish']['config_path']}/config.hcl"
+
+# Installation source
+goldfish_version = '0.9.0'
+default['goldfish']['release_url'] = "https://github.com/Caiyeon/goldfish/releases/download/v#{goldfish_version}/goldfish-linux-amd64"
+default['goldfish']['checksum'] = 'a716db6277afcac21a404b6155d0c52b1d633f27d39fba240aae4b9d67d70943'
