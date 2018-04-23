@@ -40,9 +40,9 @@ default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
 default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
-hashiui_version = '0.24.0'
+hashiui_version = '0.25.0'
 default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = '381F0F837B2213F1901CA11159AD9E57064EC035A3573C274B8280124EC36EB9'
+default['hashiui']['checksum'] = '203f2c4d84baba095c062b0f9d413f7497d234370bb07985c738f41038e81f03'
 
 #
 # GOLDFISH
