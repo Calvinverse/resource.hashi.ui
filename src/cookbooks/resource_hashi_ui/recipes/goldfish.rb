@@ -42,18 +42,20 @@ goldfish_service_name = node['goldfish']['service_name']
 goldfish_config_file = node['goldfish']['config_file']
 systemd_service goldfish_service_name do
   action :create
-  after %w[network-online.target]
-  description 'Goldfish Vault UI'
-  documentation 'https://github.com/Caiyeon/goldfish'
   install do
     wanted_by %w[multi-user.target]
   end
-  requires %w[network-online.target]
   service do
     exec_start "#{goldfish_install_path} -config=#{goldfish_config_file}"
     restart 'on-failure'
+    user goldfish_user
   end
-  user goldfish_user
+  unit do
+    after %w[network-online.target]
+    description 'Goldfish Vault UI'
+    documentation 'https://github.com/Caiyeon/goldfish'
+    requires %w[network-online.target]
+  end
 end
 
 service goldfish_service_name do
