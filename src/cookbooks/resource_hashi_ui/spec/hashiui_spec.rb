@@ -56,7 +56,7 @@ describe 'resource_hashi_ui::hashiui' do
                 "timeout": "5s"
               }
             ],
-            "enableTagOverride": false,
+            "enable_tag_override": false,
             "id": "hashiui.dashboard",
             "name": "dashboard",
             "port": 3000,

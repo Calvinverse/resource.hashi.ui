@@ -70,7 +70,7 @@ describe 'resource_hashi_ui::goldfish' do
                 "timeout": "5s"
               }
             ],
-            "enableTagOverride": false,
+            "enable_tag_override": false,
             "id": "goldfish.dashboard",
             "name": "dashboard",
             "port": 8000,

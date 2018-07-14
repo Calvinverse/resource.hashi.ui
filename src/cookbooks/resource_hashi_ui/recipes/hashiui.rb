@@ -89,7 +89,7 @@ file '/etc/consul/conf.d/hashiui.json' do
               "timeout": "5s"
             }
           ],
-          "enableTagOverride": false,
+          "enable_tag_override": false,
           "id": "hashiui.dashboard",
           "name": "dashboard",
           "port": #{hashiui_port},

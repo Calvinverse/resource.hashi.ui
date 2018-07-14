@@ -110,7 +110,7 @@ file '/etc/consul/conf.d/goldfish.json' do
               "timeout": "5s"
             }
           ],
-          "enableTagOverride": false,
+          "enable_tag_override": false,
           "id": "goldfish.dashboard",
           "name": "dashboard",
           "port": #{goldfish_port},
