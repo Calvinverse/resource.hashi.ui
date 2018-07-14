@@ -15,10 +15,10 @@ describe 'resource_hashi_ui::hashiui' do
     it 'installs the hashi-ui service' do
       expect(chef_run).to create_systemd_service('hashiui').with(
         action: [:create],
-        after: %w[network-online.target],
-        description: 'Hashi-UI',
-        documentation: 'https://github.com/jippi/hashi-ui',
-        requires: %w[network-online.target]
+        unit_after: %w[network-online.target],
+        unit_description: 'Hashi-UI',
+        unit_documentation: 'https://github.com/jippi/hashi-ui',
+        unit_requires: %w[network-online.target]
       )
     end
 

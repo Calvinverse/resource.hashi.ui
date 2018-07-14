@@ -19,10 +19,10 @@ describe 'resource_hashi_ui::goldfish' do
     it 'installs the goldfish service' do
       expect(chef_run).to create_systemd_service('goldfish').with(
         action: [:create],
-        after: %w[network-online.target],
-        description: 'Goldfish Vault UI',
-        documentation: 'https://github.com/Caiyeon/goldfish',
-        requires: %w[network-online.target]
+        unit_after: %w[network-online.target],
+        unit_description: 'Goldfish Vault UI',
+        unit_documentation: 'https://github.com/Caiyeon/goldfish',
+        unit_requires: %w[network-online.target]
       )
     end
 
