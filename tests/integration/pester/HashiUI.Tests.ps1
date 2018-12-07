@@ -15,20 +15,20 @@ Describe 'The hashi-ui application' {
         }
 
         $expectedContent = @'
+[Service]
+ExecStart = /usr/local/bin/hashiui --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul
+Restart = on-failure
+User = hashiui
+EnvironmentFile = /etc/hashiui_environment
+
 [Unit]
-Description=Hashi-UI
-Requires=network-online.target
-After=network-online.target
-Documentation=https://github.com/jippi/hashi-ui
+Description = Hashi-UI
+Documentation = https://github.com/jippi/hashi-ui
+Requires = network-online.target
+After = network-online.target
 
 [Install]
-WantedBy=multi-user.target
-
-[Service]
-ExecStart=/usr/local/bin/hashiui --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul
-User=hashiui
-EnvironmentFile=/etc/hashiui_environment
-Restart=on-failure
+WantedBy = multi-user.target
 
 '@
         $serviceFileContent = Get-Content $serviceConfigurationPath | Out-String
