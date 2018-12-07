@@ -35,19 +35,21 @@ hashiui_service_name = node['hashiui']['service_name']
 hashiui_env_file = node['hashiui']['environment_file']
 systemd_service hashiui_service_name do
   action :create
-  after %w[network-online.target]
-  description 'Hashi-UI'
-  documentation 'https://github.com/jippi/hashi-ui'
   install do
     wanted_by %w[multi-user.target]
   end
-  requires %w[network-online.target]
   service do
     exec_start "#{hashiui_install_path} --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul"
     restart 'on-failure'
     environment_file hashiui_env_file
+    user hashiui_user
   end
-  user hashiui_user
+  unit do
+    after %w[network-online.target]
+    description 'Hashi-UI'
+    documentation 'https://github.com/jippi/hashi-ui'
+    requires %w[network-online.target]
+  end
 end
 
 service hashiui_service_name do
@@ -87,7 +89,7 @@ file '/etc/consul/conf.d/hashiui.json' do
               "timeout": "5s"
             }
           ],
-          "enableTagOverride": false,
+          "enable_tag_override": false,
           "id": "hashiui.dashboard",
           "name": "dashboard",
           "port": #{hashiui_port},

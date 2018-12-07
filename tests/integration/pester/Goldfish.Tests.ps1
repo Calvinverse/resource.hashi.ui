@@ -15,19 +15,19 @@ Describe 'The goldfish application' {
         }
 
         $expectedContent = @'
+[Service]
+ExecStart = /usr/local/bin/goldfish -config=/etc/goldfish/config.hcl
+Restart = on-failure
+User = goldfish
+
 [Unit]
-Description=Goldfish Vault UI
-Requires=network-online.target
-After=network-online.target
-Documentation=https://github.com/Caiyeon/goldfish
+Description = Goldfish Vault UI
+Documentation = https://github.com/Caiyeon/goldfish
+Requires = network-online.target
+After = network-online.target
 
 [Install]
-WantedBy=multi-user.target
-
-[Service]
-ExecStart=/usr/local/bin/goldfish -config=/etc/goldfish/config.hcl
-User=goldfish
-Restart=on-failure
+WantedBy = multi-user.target
 
 '@
         $serviceFileContent = Get-Content $serviceConfigurationPath | Out-String

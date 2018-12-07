@@ -14,10 +14,10 @@ function Initialize-Environment
 {
     Start-TestConsul
 
-    Install-Vault -vaultVersion '0.9.1'
+    Install-Vault -vaultVersion '0.10.2'
     Start-TestVault
 
-    Install-Nomad -nomadVersion '0.7.1'
+    Install-Nomad -nomadVersion '0.8.4'
     Start-TestNomad
 
     Write-Output "Waiting for 10 seconds for consul, nomad and vault to start ..."
@@ -125,9 +125,7 @@ function Set-VaultSecrets
 function Start-TestConsul
 {
     [CmdletBinding()]
-    param(
-        [string] $consulVersion
-    )
+    param()
 
     if (-not (Test-Path /test/consul))
     {
