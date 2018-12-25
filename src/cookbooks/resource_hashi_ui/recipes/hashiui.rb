@@ -28,20 +28,21 @@ remote_file 'hashiui_release_binary' do
   action :create
 end
 
-# Create the systemd service for scollector. Set it to depend on the network being up
-# so that it won't start unless the network stack is initialized and has an
-# IP address
+# Set the restart time to be 5 seconds meaning that after a failure to start SystemD will
+# try to restart the service 5 seconds later
+#
+# Also set the StartLimitIntervalSec to 0 so that SystemD doesn't care how many time
+# it fails. See: https://unix.stackexchange.com/a/324297
 hashiui_service_name = node['hashiui']['service_name']
-hashiui_env_file = node['hashiui']['environment_file']
 systemd_service hashiui_service_name do
   action :create
   install do
     wanted_by %w[multi-user.target]
   end
   service do
-    exec_start "#{hashiui_install_path} --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul"
-    restart 'on-failure'
-    environment_file hashiui_env_file
+    exec_start "#{hashiui_install_path} --consul-enable --consul-read-only --proxy-address /dashboards/consul"
+    restart 'always'
+    restart_sec 5
     user hashiui_user
   end
   unit do
@@ -49,6 +50,7 @@ systemd_service hashiui_service_name do
     description 'Hashi-UI'
     documentation 'https://github.com/jippi/hashi-ui'
     requires %w[network-online.target]
+    start_limit_interval_sec 0
   end
 end
 

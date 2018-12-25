@@ -37,7 +37,6 @@ default['hashiui']['service_user'] = 'hashiui'
 default['hashiui']['service_group'] = 'hashiui'
 
 default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
-default['hashiui']['environment_file'] = '/etc/hashiui_environment'
 
 # Installation source
 hashiui_version = '1.0.0'
