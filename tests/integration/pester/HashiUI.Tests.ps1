@@ -16,16 +16,17 @@ Describe 'The hashi-ui application' {
 
         $expectedContent = @'
 [Service]
-ExecStart = /usr/local/bin/hashiui --consul-enable --consul-read-only --nomad-enable --nomad-read-only --proxy-address /dashboards/consul
-Restart = on-failure
+ExecStart = /usr/local/bin/hashiui --consul-enable --consul-read-only --proxy-address /dashboards/consul
+RestartSec = 5
+Restart = always
 User = hashiui
-EnvironmentFile = /etc/hashiui_environment
 
 [Unit]
 Description = Hashi-UI
 Documentation = https://github.com/jippi/hashi-ui
 Requires = network-online.target
 After = network-online.target
+StartLimitIntervalSec = 0
 
 [Install]
 WantedBy = multi-user.target
