@@ -8,7 +8,7 @@
 #
 
 ui_proxy_path = node['consul']['proxy_path']
-file '/etc/consul/conf.d/consul_ui.json' do
+file '/etc/consul/conf.d/consul_ui.json' do # ~FC005
   action :create
   content <<~JSON
     {
