@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 #
+# CONSUL
+#
+
+default['consul']['proxy_path'] = '/dashboards/consul'
+default['consul']['ports']['http'] = 8500
+
+#
 # CONSULTEMPLATE
 #
 
@@ -22,23 +29,3 @@ default['firewall']['allow_winrm'] = false
 
 # No communication via IPv6 at all
 default['firewall']['ipv6_enabled'] = false
-
-#
-# HASHI-UI
-#
-
-default['hashiui']['install_path'] = '/usr/local/bin/hashiui'
-default['hashiui']['service_name'] = 'hashiui'
-
-default['hashiui']['port'] = 3000
-default['hashiui']['proxy_path'] = '/dashboards/consul'
-
-default['hashiui']['service_user'] = 'hashiui'
-default['hashiui']['service_group'] = 'hashiui'
-
-default['hashiui']['consul_template_file'] = 'hashiui.ctmpl'
-
-# Installation source
-hashiui_version = '1.0.0'
-default['hashiui']['release_url'] = "https://github.com/jippi/hashi-ui/releases/download/v#{hashiui_version}/hashi-ui-linux-amd64"
-default['hashiui']['checksum'] = '0d4da7a33f56078a57fca2323b6abd318a60d062059dd4534e473ea9c72e28cf'
