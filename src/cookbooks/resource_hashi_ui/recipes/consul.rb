@@ -18,6 +18,30 @@ file '/etc/consul/conf.d/consul_ui.json' do # ~FC005
   JSON
 end
 
+# Overwrite the consul service configuration because we need another command line parameter
+# Once the issue with the 'ui_content_path' is fixed we can remove this
+# (see: https://github.com/hashicorp/consul/issues/6346)
+ui_proxy_path = node['consul']['proxy_path']
+systemd_service 'consul' do
+  action :create
+  install do
+    wanted_by %w[multi-user.target]
+  end
+  service do
+    environment '"GOMAXPROCS=2" "PATH=/usr/local/bin:/usr/bin:/bin"'
+    exec_reload '/bin/kill -HUP $MAINPID'
+    exec_start "/opt/consul/1.6.1/consul agent -config-file=/etc/consul/consul.json -config-dir=/etc/consul/conf.d -ui-content-path #{ui_proxy_path}"
+    kill_signal 'TERM'
+    user 'consul'
+    working_directory '/var/lib/consul'
+  end
+  unit do
+    after %w[network.target]
+    description 'consul'
+    wants %w[network.target]
+  end
+end
+
 #
 # UI SERVICE
 #
