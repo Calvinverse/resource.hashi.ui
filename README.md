@@ -56,6 +56,9 @@ for building infrastructure images.
   * Attach a DVD image that points to an ISO file containing the settings for the environment. These
     are normally found in the output of the [Calvinverse.Infrastructure](https://github.com/Calvinverse/calvinverse.infrastructure)
     repository. Pick the correct ISO for the task, in this case the `Linux Consul Client` image
+  * Disable checkpoints
+  * Set the VM to always start
+  * Set the VM to shut down on stop
 * Start the VM, it should automatically connect to the correct environment once it has provisioned
 * Remove the old VM
   * SSH into the host
