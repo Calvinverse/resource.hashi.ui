@@ -39,8 +39,8 @@ No additional configuration is applied other than the default one for the base i
 
 ## Build, test and release
 
-The build process follows the [standard procedure](http://devinfrastructure.vista.co/#/help/technical_build_process_infrastructure)
-for building infrastructure images.
+The build process follows the standard procedure for
+[building Calvinverse images](https://www.calvinverse.net/documentation/how-to-build).
 
 ## Deploy
 
