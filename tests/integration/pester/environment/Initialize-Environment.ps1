@@ -1,57 +1,25 @@
 function Get-IpAddress
 {
-    $output = & /sbin/ifconfig eth0
-    $line = $output |
-        Where-Object { $_.Contains('inet addr:') } |
-        Select-Object -First 1
+    $ErrorActionPreference = 'Stop'
 
-    $line = $line.Trim()
-    $line = $line.SubString('inet addr:'.Length)
-    return $line.SubString(0, $line.IndexOf(' '))
+    $output = & ip a show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+
+    return $output.Trim()
 }
 
 function Initialize-Environment
 {
     Start-TestConsul
 
-    Install-Vault -vaultVersion '0.10.2'
-    Start-TestVault
-
-    Install-Nomad -nomadVersion '0.8.4'
-    Start-TestNomad
-
     Write-Output "Waiting for 10 seconds for consul, nomad and vault to start ..."
     Start-Sleep -Seconds 10
 
     Join-Cluster
 
-    Set-VaultSecrets
     Set-ConsulKV
 
     Write-Output "Giving consul-template 30 seconds to process the data ..."
     Start-Sleep -Seconds 30
-}
-
-function Install-Nomad
-{
-    [CmdletBinding()]
-    param(
-        [string] $nomadVersion
-    )
-
-    & wget "https://releases.hashicorp.com/nomad/$($nomadVersion)/nomad_$($nomadVersion)_linux_amd64.zip" --output-document /test/nomad.zip
-    & unzip /test/nomad.zip -d /test/nomad
-}
-
-function Install-Vault
-{
-    [CmdletBinding()]
-    param(
-        [string] $vaultVersion
-    )
-
-    & wget "https://releases.hashicorp.com/vault/$($vaultVersion)/vault_$($vaultVersion)_linux_amd64.zip" --output-document /test/vault.zip
-    & unzip /test/vault.zip -d /test/vault
 }
 
 function Join-Cluster
@@ -111,17 +79,6 @@ function Set-ConsulKV
     & consul kv put -http-addr=http://127.0.0.1:8550 config/services/secrets/protocols/http/port '8200'
 }
 
-function Set-VaultSecrets
-{
-    Write-Output 'Setting vault secrets ...'
-
-    # secret/services/queue/logs/syslog
-
-    # secret/services/jobs/encrypt
-
-    # secret/services/jobs/token
-}
-
 function Start-TestConsul
 {
     [CmdletBinding()]
@@ -139,32 +96,4 @@ function Start-TestConsul
         -PassThru `
         -RedirectStandardOutput /test/consul/output.out `
         -RedirectStandardError /test/consul/error.out
-}
-
-function Start-TestNomad
-{
-    [CmdletBinding()]
-    param(
-    )
-
-    Write-Output "Starting nomad ..."
-    Start-Process `
-        -FilePath "/test/nomad/nomad" `
-        -ArgumentList 'agent -config=/test/pester/environment/nomad.hcl' `
-        -RedirectStandardOutput /test/nomad/output.out `
-        -RedirectStandardError /test/nomad/error.out
-}
-
-function Start-TestVault
-{
-    [CmdletBinding()]
-    param(
-    )
-
-    Write-Output "Starting vault ..."
-    Start-Process `
-        -FilePath "/test/vault/vault" `
-        -ArgumentList "-dev" `
-        -RedirectStandardOutput /test/vault/output.out `
-        -RedirectStandardError /test/vault/error.out
 }
