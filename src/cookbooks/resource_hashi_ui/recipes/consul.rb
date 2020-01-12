@@ -32,12 +32,15 @@ systemd_service 'consul' do
     exec_reload '/bin/kill -HUP $MAINPID'
     exec_start "/opt/consul/1.6.2/consul agent -config-file=/etc/consul/consul.json -config-dir=/etc/consul/conf.d -ui-content-path #{ui_proxy_path}"
     kill_signal 'TERM'
+    restart 'always'
+    restart_sec 5
     user 'consul'
     working_directory '/var/lib/consul'
   end
   unit do
     after %w[network.target]
     description 'consul'
+    start_limit_interval_sec 0
     wants %w[network.target]
   end
 end
