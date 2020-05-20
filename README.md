@@ -39,8 +39,8 @@ No additional configuration is applied other than the default one for the base i
 
 ## Build, test and release
 
-The build process follows the [standard procedure](http://devinfrastructure.vista.co/#/help/technical_build_process_infrastructure)
-for building infrastructure images.
+The build process follows the standard procedure for
+[building Calvinverse images](https://www.calvinverse.net/documentation/how-to-build).
 
 ## Deploy
 
@@ -56,6 +56,9 @@ for building infrastructure images.
   * Attach a DVD image that points to an ISO file containing the settings for the environment. These
     are normally found in the output of the [Calvinverse.Infrastructure](https://github.com/Calvinverse/calvinverse.infrastructure)
     repository. Pick the correct ISO for the task, in this case the `Linux Consul Client` image
+  * Disable checkpoints
+  * Set the VM to always start
+  * Set the VM to shut down on stop
 * Start the VM, it should automatically connect to the correct environment once it has provisioned
 * Remove the old VM
   * SSH into the host
