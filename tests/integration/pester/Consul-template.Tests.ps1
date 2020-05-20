@@ -16,17 +16,17 @@ Describe 'The consul-template application' {
 
     Context 'has been daemonized' {
         $serviceConfigurationPath = '/etc/systemd/system/consul-template.service'
-        if (-not (Test-Path $serviceConfigurationPath))
-        {
+        if (-not (Test-Path $serviceConfigurationPath)) {
             It 'has a systemd configuration' {
-               $false | Should Be $true
+                $false | Should Be $true
             }
         }
 
         $expectedContent = @'
 [Service]
 ExecStart = /usr/local/bin/run_consul-template.sh
-Restart = on-failure
+RestartSec = 5
+Restart = always
 EnvironmentFile = /etc/environment
 
 [Unit]
@@ -34,6 +34,7 @@ Description = Consul Template
 Documentation = https://github.com/hashicorp/consul-template
 Requires = multi-user.target
 After = multi-user.target
+StartLimitIntervalSec = 0
 
 [Install]
 WantedBy = multi-user.target

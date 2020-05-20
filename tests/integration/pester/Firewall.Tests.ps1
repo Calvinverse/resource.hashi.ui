@@ -5,7 +5,7 @@ Describe 'The firewall' {
         It 'should return a status' {
             $ufwOutput | Should Not Be $null
             $ufwOutput.GetType().FullName | Should Be 'System.Object[]'
-            $ufwOutput.Length | Should Be 31
+            $ufwOutput.Length | Should Be 27
         }
 
         It 'should be enabled' {
@@ -49,12 +49,6 @@ Describe 'The firewall' {
         }
     }
 
-    Context 'should allow hashi-ui' {
-        It 'on port 3000' {
-            ($ufwOutput | Where-Object {$_ -match '(3000/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-    }
-
     Context 'should allow telegraf' {
         It 'on TCP port 8125' {
             ($ufwOutput | Where-Object {$_ -match '(8125/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
@@ -68,12 +62,6 @@ Describe 'The firewall' {
 
         It 'on UDP port 53' {
             ($ufwOutput | Where-Object {$_ -match '(53/udp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
-        }
-    }
-
-    Context 'should allow vault-ui' {
-        It 'on port 8000' {
-            ($ufwOutput | Where-Object {$_ -match '(8000/tcp)\s*(ALLOW)\s*(Anywhere)'} ) | Should Not Be $null
         }
     }
 }
