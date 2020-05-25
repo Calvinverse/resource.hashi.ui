@@ -18,14 +18,8 @@ write_files:
   path: /run/cloud-init/consul/consul_secrets.json
 - content: |
     {
-      "bootstrap_expect": 1,
-      "server": true
     }
-  path: /run/cloud-init/consul/server/consul_server_bootstrap.json
-- content: |
-    {
-    }
-  path: /run/cloud-init/consul/server/consul_server_location.json
+  path: /run/cloud-init/consul/client/consul_client_location.json
 - content: |
     #
     # See unbound.conf(5) man page, version 1.6.3.

@@ -564,11 +564,6 @@
         <TemplateTokens Include="DirTestsIntegrationProvisionJsonEscaped">
             <ReplacementValue>$(DirTestsIntegrationProvision.Replace('\', '/'))</ReplacementValue>
         </TemplateTokens>
-
-        <!-- Directories -->
-        <TemplateTokens Include="DirTestsIntegration">
-            <ReplacementValue>$(DirTestsIntegration)</ReplacementValue>
-        </TemplateTokens>
     </ItemGroup>
 
     <Import

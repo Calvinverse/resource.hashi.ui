@@ -30,7 +30,7 @@ systemd_service 'consul' do
   service do
     environment '"GOMAXPROCS=2" "PATH=/usr/local/bin:/usr/bin:/bin"'
     exec_reload '/bin/kill -HUP $MAINPID'
-    exec_start "/opt/consul/1.6.2/consul agent -config-file=/etc/consul/consul.json -config-dir=/etc/consul/conf.d -ui-content-path #{ui_proxy_path}"
+    exec_start "/opt/consul/1.6.3/consul agent -config-file=/etc/consul/consul.json -config-dir=/etc/consul/conf.d -ui-content-path #{ui_proxy_path}"
     kill_signal 'TERM'
     restart 'always'
     restart_sec 5
