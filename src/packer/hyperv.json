@@ -5,7 +5,6 @@
 
         "cookbook_name": "not_realy_a_cookbook_name",
 
-        "dir_cookbooks_src": "src/cookbooks",
         "dir_cookbooks_vendors": "packages/vendor/cookbooks",
         "dir_http_user": null,
         "dir_src_provisioning": "src/provisioning",
