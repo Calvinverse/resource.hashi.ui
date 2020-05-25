@@ -30,9 +30,9 @@
     <!--
         **** PREPARE - COPY FILES ****
     -->
-        <!--
+    <!--
         Files that should be copied, either from the file system or from a NuGet package.
-        -->
+    -->
     <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
         <!--
         <FilesToCopy Include="">

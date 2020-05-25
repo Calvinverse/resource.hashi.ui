@@ -41,9 +41,7 @@
         If the deletion process fails the build will continue and a warning will be printed.
     -->
     <ItemGroup Condition=" '$(ShouldLoadDirectoriesToDelete)' == 'true' ">
-        <!--
-        <DirectoriesToDelete Include="" />
-        -->
+        <DirectoriesToDelete Include="$(DirWorkspace)\berks" />
     </ItemGroup>
 
 
@@ -74,9 +72,9 @@
     <!--
         **** PREPARE - COPY FILES ****
     -->
-        <!--
+    <!--
         Files that should be copied, either from the file system or from a NuGet package.
-        -->
+    -->
     <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
         <FilesToCopy
             Exclude="$(DirSrcCookbooks)\$(NameCookbook)\metadata.rb;$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb"
@@ -144,6 +142,19 @@
         </BuildFilesToGenerate>
         <BuildFilesToGenerate Include="$(DirBuildTempCookbooks)\$(NameCookbook)\attributes\resource_information.rb">
             <Template>$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateAzureImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\azure.json">
+            <Template>$(DirSrcPacker)\azure.json</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateAzureImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\azure_variables.json">
+            <Template>$(DirSrcPacker)\azure_variables.json</Template>
             <Encoding></Encoding>
         </BuildFilesToGenerate>
 
@@ -496,6 +507,18 @@
             <ChefSpecPattern>./spec/*_spec.rb</ChefSpecPattern>
         </ChefCookbooksToTest>
     </ItemGroup>
+
+
+    <!--
+        **** PACKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that packer should remove an existing image before building the new image. -->
+        <PackerForceRemoveOldImage Condition=" '$(ShouldCreateAzureImage)' == 'true' ">true</PackerForceRemoveOldImage>
+
+        <!-- Indicate that packer should keep the image if an error occurs. -->
+        <PackerKeepImageOnError Condition=" '$(ShouldCreateAzureImage)' == 'true' ">false</PackerKeepImageOnError>
+    </PropertyGroup>
 
 
     <!--

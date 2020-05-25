@@ -201,6 +201,7 @@
         <DirTestsIntegration>$(DirTests)\integration</DirTestsIntegration>
         <DirTestsIntegrationPacker>$(DirTestsIntegration)\packer</DirTestsIntegrationPacker>
         <DirTestsIntegrationPester>$(DirTestsIntegration)\pester</DirTestsIntegrationPester>
+        <DirTestsIntegrationProvision>$(DirTestsIntegration)\provision</DirTestsIntegrationProvision>
 
         <!-- The directory that contains all the vendor cookbooks -->
         <!-- <DirVendorCookbooks>$(DirWorkspace)\berks\cookbooks</DirVendorCookbooks> -->
@@ -233,7 +234,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <VersionLinuxBaseResource>1804.3.0</VersionLinuxBaseResource>
+        <VersionLinuxBaseResource>1804.4.0</VersionLinuxBaseResource>
     </PropertyGroup>
 
 
@@ -571,8 +572,13 @@
     </ItemGroup>
 
     <Import
+        Condition="Exists('$(MSBuildThisFileDirectory)packer.azure.props') AND '$(ShouldCreateAzureImage)' == 'true' "
+        Project="$(MSBuildThisFileDirectory)packer.azure.props" />
+
+    <Import
         Condition="Exists('$(MSBuildThisFileDirectory)packer.hyperv.props') AND '$(ShouldCreateHyperVImage)' == 'true' "
         Project="$(MSBuildThisFileDirectory)packer.hyperv.props" />
+
 
     <!--
         **** STEPS ****
@@ -631,7 +637,7 @@
     -->
 
     <PropertyGroup>
-        <OpsConfigurationVersion>0.3</OpsConfigurationVersion>
+        <OpsConfigurationVersion>1.0</OpsConfigurationVersion>
     </PropertyGroup>
 
     <!--
@@ -639,7 +645,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">1.0.0</PackageMinimumVersion>
+        <PackageMinimumVersion Condition=" '$(PackageMinimumVersion)' == '' ">1.1.0</PackageMinimumVersion>
         <PackageMaximumVersion Condition=" '$(PackageMaximumVersion)' == '' ">2.0.0</PackageMaximumVersion>
     </PropertyGroup>
 </Project>
