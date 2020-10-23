@@ -16,9 +16,10 @@ Describe 'The consul-template application' {
 
     Context 'has been daemonized' {
         $serviceConfigurationPath = '/etc/systemd/system/consul-template.service'
-        if (-not (Test-Path $serviceConfigurationPath)) {
+        if (-not (Test-Path $serviceConfigurationPath))
+        {
             It 'has a systemd configuration' {
-                $false | Should Be $true
+               $false | Should Be $true
             }
         }
 
