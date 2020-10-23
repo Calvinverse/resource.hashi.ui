@@ -41,9 +41,7 @@
         If the deletion process fails the build will continue and a warning will be printed.
     -->
     <ItemGroup Condition=" '$(ShouldLoadDirectoriesToDelete)' == 'true' ">
-        <!--
-        <DirectoriesToDelete Include="" />
-        -->
+        <DirectoriesToDelete Include="$(DirWorkspace)\berks" />
     </ItemGroup>
 
 
@@ -74,6 +72,16 @@
     <!--
         **** PREPARE - COPY FILES ****
     -->
+    <!--
+        Files that should be copied, either from the file system or from a NuGet package.
+    -->
+    <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
+        <FilesToCopy
+            Exclude="$(DirSrcCookbooks)\$(NameCookbook)\metadata.rb;$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb"
+            Include="$(DirSrcCookbooks)\$(NameCookbook)\**\*.*">
+            <Destination>$(DirBuildTempCookbooks)\$(NameCookbook)</Destination>
+        </FilesToCopy>
+    </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadNuGetFilesToCopy)' == 'true' ">
         <!--
         <NuGetFilesToCopy Include="My.Cool.NuGet.Package">
@@ -82,17 +90,10 @@
         </NuGetFilesToCopy>
         -->
     </ItemGroup>
-    <ItemGroup Condition=" '$(ShouldLoadHttpFilesToCopy)' == 'true' ">
-    </ItemGroup>
-    <ItemGroup Condition=" '$(ShouldLoadFilesToCopy)' == 'true' ">
-        <FilesToCopy
-            Exclude="$(DirSrcCookbooks)\$(NameCookbook)\metadata.rb;$(DirSrcCookbooks)\$(NameCookbook)\attributes\resource_information.rb"
-            Include="$(DirSrcCookbooks)\$(NameCookbook)\**\*.*">
-            <Destination>$(DirBuildTempCookbooks)\$(NameCookbook)</Destination>
-        </FilesToCopy>
-    </ItemGroup>
     <ItemGroup Condition=" '$(ShouldLoadArchiveFilesToCopy)' == 'true' ">
-        <ArchiveFilesToCopy Include="$(RepositoryArchive)\Base.Linux-$(VersionLinuxBaseResource).zip">
+        <ArchiveFilesToCopy
+            Condition=" '$(ShouldCreateHyperVImage)' == 'true' "
+            Include="$(RepositoryArchive)\Base.Linux-$(VersionLinuxBaseResource).zip">
             <Destination>$(DirBuildTempVmBase)</Destination>
         </ArchiveFilesToCopy>
     </ItemGroup>
@@ -144,8 +145,29 @@
             <Encoding></Encoding>
         </BuildFilesToGenerate>
 
-        <BuildFilesToGenerate Include="$(DirBuildTemp)\packer_variables.json">
-            <Template>$(DirSrcPacker)\packer_variables.json</Template>
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateAzureImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\azure.json">
+            <Template>$(DirSrcPacker)\azure.json</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateAzureImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\azure_variables.json">
+            <Template>$(DirSrcPacker)\azure_variables.json</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateHyperVImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\hyperv.json">
+            <Template>$(DirSrcPacker)\hyperv.json</Template>
+            <Encoding></Encoding>
+        </BuildFilesToGenerate>
+        <BuildFilesToGenerate
+            Condition=" '$(ShouldCreateHyperVImage)' == 'true' "
+            Include="$(DirBuildTemp)\build\hyperv_variables.json">
+            <Template>$(DirSrcPacker)\hyperv_variables.json</Template>
             <Encoding></Encoding>
         </BuildFilesToGenerate>
     </ItemGroup>
@@ -488,6 +510,18 @@
 
 
     <!--
+        **** PACKER - PACK ****
+    -->
+    <PropertyGroup>
+        <!-- Indicate that packer should remove an existing image before building the new image. -->
+        <PackerForceRemoveOldImage Condition=" '$(ShouldCreateAzureImage)' == 'true' ">true</PackerForceRemoveOldImage>
+
+        <!-- Indicate that packer should keep the image if an error occurs. -->
+        <PackerKeepImageOnError Condition=" '$(ShouldCreateAzureImage)' == 'true' ">false</PackerKeepImageOnError>
+    </PropertyGroup>
+
+
+    <!--
         **** DOCKER - PACK ****
     -->
     <PropertyGroup>
@@ -555,8 +589,6 @@
         - StepId          : The ID of the step. In general the name of the property that references the step file.
         - StepName        : The name of the step.
         - StepPath        : The full path to the script file for the step.
-
-        Additionally all the standard properties as seen below and the properties for the given build step are passed in.
 
         Additional build steps can be defined by providing the path to the MsBuild script that should be executed
         for that step, e.g. adding a build step that points to the 'c:\stuff\MyCoolScript.msbuild' will execute
