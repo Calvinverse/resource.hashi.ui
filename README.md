@@ -5,7 +5,7 @@ This repository contains the source code necessary to build Ubuntu Hyper-V hard-
 
 ## Image
 
-The image is created by using the [Linux base image](https://github.com/Calvinverse/base.linux)
+The image is created by using the [Linux base image](https://github.com/Calvinverse/base.vm.linux)
 and amending it using a [Chef](https://www.chef.io/chef/) cookbook which updates the Consul
 configuration to enable the UI.
 
